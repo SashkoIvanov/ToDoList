@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="StreakTodo" />
+  <meta name="theme-color" content="#0a0a0f" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f5f4f0" media="(prefers-color-scheme: light)" />
+  <title>StreakTodo</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="app.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-left">
+      <span class="app-logo">⚡</span>
+      <span class="app-name">StreakTodo</span>
+    </div>
+    <div class="header-right">
+      <div class="streak-badge" id="streakBadge">
+        <span class="streak-fire">🔥</span>
+        <span class="streak-count" id="streakCount">0</span>
+        <span class="streak-label">day streak</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-section">
+    <div class="progress-meta">
+      <span class="progress-date" id="progressDate"></span>
+      <span class="progress-frac" id="progressFrac">0 / 0</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <p class="progress-msg" id="progressMsg">Add tasks to start your streak 🚀</p>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <main class="page-wrap">
+
+    <!-- TODAY -->
+    <section class="tab-content active" id="tab-today">
+      <div class="section-header">
+        <h2>Today's Tasks</h2>
+        <button class="add-btn" id="addTaskBtn">+ Add Task</button>
+      </div>
+      <div class="filter-bar">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="starred">⭐ Starred</button>
+      </div>
+      <div class="task-list" id="taskList">
+        <div class="empty-state" id="emptyToday">
+          <div class="empty-icon">📋</div>
+          <p>No tasks for today.<br/>Tap <strong>+ Add Task</strong> to begin!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="tab-content" id="tab-goals">
+      <div class="section-header">
+        <h2>My Goals</h2>
+        <button class="add-btn" id="addGoalBtn">+ Add Goal</button>
+      </div>
+      <div class="goals-list" id="goalsList">
+        <div class="empty-state">
+          <div class="empty-icon">🎯</div>
+          <p>No goals yet.<br/>Create a goal to group your tasks!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECURRING -->
+    <section class="tab-content" id="tab-recurring">
+      <div class="section-header">
+        <h2>Recurring Tasks</h2>
+        <button class="add-btn" id="addRecurringBtn">+ Add Recurring</button>
+      </div>
+      <div class="recurring-list" id="recurringList">
+        <div class="empty-state">
+          <div class="empty-icon">🔄</div>
+          <p>No recurring tasks yet.<br/>Set tasks that repeat automatically!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="tab-content" id="tab-profile">
+      <div class="profile-hero">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profileAvatar">⚡</div>
+          <div class="profile-streak-ring" id="profileStreakRing"></div>
+        </div>
+        <div class="profile-name" id="profileNameDisplay">My Profile</div>
+        <div class="profile-joined" id="profileJoined"></div>
+        <button class="profile-edit-btn" id="editProfileBtn">✏️ Edit Profile</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statCurrentStreak">0</div>
+          <div class="stat-label">Current Streak 🔥</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statBestStreak">0</div>
+          <div class="stat-label">Best Streak 🏆</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statTotalDays">0</div>
+          <div class="stat-label">Perfect Days ✅</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statTotalTasks">0</div>
+          <div class="stat-label">Tasks Done 💪</div>
+        </div>
+      </div>
+
+      <div class="calendar-section" id="calendarSection"></div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV (app-like) -->
+  <nav class="bottom-nav">
+    <button class="bnav-btn active" data-tab="today">
+      <svg class="bnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <span class="bnav-label">Today</span>
+    </button>
+    <button class="bnav-btn" data-tab="goals">
+      <svg class="bnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      <span class="bnav-label">Goals</span>
+    </button>
+    <button class="bnav-btn" data-tab="recurring">
+      <svg class="bnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      <span class="bnav-label">Recurring</span>
+    </button>
+    <button class="bnav-btn" data-tab="profile">
+      <svg class="bnav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="bnav-label">Profile</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: ADD / EDIT TASK -->
+  <div class="modal-overlay" id="taskModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h3 id="taskModalTitle">New Task</h3>
+        <button class="close-btn" data-close="taskModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="field-label">Task Name</label>
+        <input type="text" class="field-input" id="taskName" placeholder="What do you need to do?" autocomplete="off" />
+
+        <label class="field-label">Star this task?</label>
+        <button class="star-toggle" id="taskStarToggle" data-starred="false">
+          <span class="star-icon">☆</span>
+          <span class="star-text">Tap to mark as important</span>
+        </button>
+
+        <label class="field-label">Goal (optional)</label>
+        <select class="field-input" id="taskGoal">
+          <option value="">— No goal —</option>
+        </select>
+
+        <label class="field-label">Notes (optional)</label>
+        <textarea class="field-input" id="taskNotes" rows="2" placeholder="Any extra details..." autocomplete="off"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close="taskModal">Cancel</button>
+        <button class="btn-primary" id="saveTaskBtn">Save Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD GOAL -->
+  <div class="modal-overlay" id="goalModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h3>New Goal</h3>
+        <button class="close-btn" data-close="goalModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="field-label">Goal Name</label>
+        <input type="text" class="field-input" id="goalName" placeholder="e.g. Lose Weight, Learn Spanish..." autocomplete="off" />
+        <label class="field-label">Emoji Icon</label>
+        <div class="emoji-picker" id="emojiPicker">
+          <button class="emoji-opt active" data-emoji="🎯">🎯</button>
+          <button class="emoji-opt" data-emoji="💪">💪</button>
+          <button class="emoji-opt" data-emoji="📚">📚</button>
+          <button class="emoji-opt" data-emoji="💰">💰</button>
+          <button class="emoji-opt" data-emoji="🏃">🏃</button>
+          <button class="emoji-opt" data-emoji="🧘">🧘</button>
+          <button class="emoji-opt" data-emoji="🎨">🎨</button>
+          <button class="emoji-opt" data-emoji="🌱">🌱</button>
+          <button class="emoji-opt" data-emoji="✈️">✈️</button>
+          <button class="emoji-opt" data-emoji="🎵">🎵</button>
+        </div>
+        <label class="field-label">Color</label>
+        <div class="color-picker" id="colorPicker">
+          <button class="color-opt active" data-color="#6c63ff" style="background:#6c63ff"></button>
+          <button class="color-opt" data-color="#ff6584" style="background:#ff6584"></button>
+          <button class="color-opt" data-color="#43e97b" style="background:#43e97b"></button>
+          <button class="color-opt" data-color="#f7971e" style="background:#f7971e"></button>
+          <button class="color-opt" data-color="#4facfe" style="background:#4facfe"></button>
+          <button class="color-opt" data-color="#f953c6" style="background:#f953c6"></button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close="goalModal">Cancel</button>
+        <button class="btn-primary" id="saveGoalBtn">Save Goal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD RECURRING TASK -->
+  <div class="modal-overlay" id="recurringModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h3>New Recurring Task</h3>
+        <button class="close-btn" data-close="recurringModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="field-label">Task Name</label>
+        <input type="text" class="field-input" id="recurringName" placeholder="e.g. Go to the gym..." autocomplete="off" />
+        <label class="field-label">Star this task?</label>
+        <button class="star-toggle" id="recurringStarToggle" data-starred="false">
+          <span class="star-icon">☆</span>
+          <span class="star-text">Tap to mark as important</span>
+        </button>
+        <label class="field-label">Goal (optional)</label>
+        <select class="field-input" id="recurringGoal">
+          <option value="">— No goal —</option>
+        </select>
+        <label class="field-label">Repeat on days</label>
+        <div class="days-selector" id="daysSelector">
+          <button class="day-btn" data-day="0">Sun</button>
+          <button class="day-btn" data-day="1">Mon</button>
+          <button class="day-btn" data-day="2">Tue</button>
+          <button class="day-btn" data-day="3">Wed</button>
+          <button class="day-btn" data-day="4">Thu</button>
+          <button class="day-btn" data-day="5">Fri</button>
+          <button class="day-btn" data-day="6">Sat</button>
+        </div>
+        <div class="days-presets">
+          <button class="preset-btn" id="presetEvery">Every day</button>
+          <button class="preset-btn" id="presetWeekdays">Weekdays</button>
+          <button class="preset-btn" id="presetWeekends">Weekends</button>
+          <button class="preset-btn" id="presetClear">Clear</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close="recurringModal">Cancel</button>
+        <button class="btn-primary" id="saveRecurringBtn">Save Recurring</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT PROFILE -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h3>Edit Profile</h3>
+        <button class="close-btn" data-close="profileModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="field-label">Your Name</label>
+        <input type="text" class="field-input" id="profileNameInput" placeholder="Enter your name..." autocomplete="off" />
+        <label class="field-label">Avatar</label>
+        <div class="emoji-picker" id="avatarPicker">
+          <button class="emoji-opt active" data-emoji="⚡">⚡</button>
+          <button class="emoji-opt" data-emoji="🔥">🔥</button>
+          <button class="emoji-opt" data-emoji="💎">💎</button>
+          <button class="emoji-opt" data-emoji="🚀">🚀</button>
+          <button class="emoji-opt" data-emoji="🦁">🦁</button>
+          <button class="emoji-opt" data-emoji="🐉">🐉</button>
+          <button class="emoji-opt" data-emoji="🌟">🌟</button>
+          <button class="emoji-opt" data-emoji="🎯">🎯</button>
+          <button class="emoji-opt" data-emoji="💪">💪</button>
+          <button class="emoji-opt" data-emoji="🧠">🧠</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close="profileModal">Cancel</button>
+        <button class="btn-primary" id="saveProfileBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <canvas id="confettiCanvas"></canvas>
+  <script src="app.js"></script>
+</body>
+</html>
